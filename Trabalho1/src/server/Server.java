@@ -1,7 +1,7 @@
 package server;
 
 import server.controller.PessoaController;
-import server.model.Pessoa;
+import server.controller.TurmaController;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -9,7 +9,8 @@ import java.net.Socket;
 
 public class Server {
 
-    static PessoaController controller = new PessoaController();
+    static PessoaController pessoaController = new PessoaController();
+    static TurmaController turmaController = new TurmaController(pessoaController);
 
     public static void main(String[] args) throws IOException {
         ServerSocket server = new ServerSocket(65000);
@@ -59,26 +60,15 @@ public class Server {
 
     private static String handleMessageFromClient(String mensagem) throws Exception {
         String[] partes = mensagem.split(";");
-        String operacao = partes[0];
-
-        Pessoa p = null;
-
-        switch (operacao) {
-            case "INSERT":
-                p = new Pessoa(partes[1], partes[2], partes[3]);
-                controller.createPessoa(p);
+        switch (partes[0]) {
+            case "PESSOA":
+                return pessoaController.handleMessage(partes);
+            case "TURMA":
+                return turmaController.handleMessage(partes);
+            default:
                 return "";
-
-            case "UPDATE":
-                p = new Pessoa(partes[1], partes[2], partes[3]);
-                controller.updatePessoa(p);
-                return "Pessoa atualizada com sucesso";
-
-            case "GET":
-                p = controller.getPessoa(partes[1]);
-                return p.toString();
         }
-
-        return "";
     }
+
+
 }

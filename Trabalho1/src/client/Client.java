@@ -22,6 +22,14 @@ public class Client {
                 "1 - Inserir pessoa\n" +
                 "2 - Atualizar pessoa\n" +
                 "3 - Consultar pessoa\n" +
+                "4 - Remover pessoa\n" +
+                "5 - Listar pessoas\n" +
+                "6 - Inserir turma\n" +
+                "7 - Adicionar aluno na turma\n" +
+                "8 - Atualizar turma\n" +
+                "9 - Consultar turma\n" +
+                "10 - Remover turma\n" +
+                "11 - Listar turmas\n" +
                 "exit - Sair"
             );
 
@@ -39,39 +47,47 @@ public class Client {
     }
 
     private static void handleOperation(int operacao) throws Exception {
-        String[] pessoa = null;
-        String cpf = null;
-        String message = null;
+        String[] dados = null;
+        String identificador = null;
+        String prefixo = operacao <= 5 ? "PESSOA" : "TURMA";
 
         switch (operacao) {
             case 1: //INSERT
-                pessoa = bindPessoaFromConsole("");
-                sendInsertMessage(pessoa);
+            case 6:
+                dados = bindDataFromConsole(prefixo, "");
+                sendInsertMessage(prefixo, dados);
                 break;
             case 2: //UPDATE
-                cpf = getPessoaSelecionadaFromConsole();
-                pessoa = bindPessoaFromConsole(cpf);
-                sendUpdateMessage(pessoa);
+            case 8:
+                identificador = getSelectedRegisterFromConsole(prefixo);
+                dados = bindDataFromConsole(prefixo, identificador);
+                sendUpdateMessage(prefixo, dados);
+                break;
+            case 7: //ADD_PESSOA
+                dados = getAlunoTurmaFromConsole();
+                String msg =  "TURMA;ADD_PESSOA;" + dados[0] + ";" + dados[1];
+                sendMessageServer(msg);
                 break;
             case 3: //GET
-                cpf = getPessoaSelecionadaFromConsole();
-                sendGetMessage(cpf);
+            case 9:
+                identificador = getSelectedRegisterFromConsole(prefixo);
+                sendGetMessage(prefixo, identificador);
                 break;
         }
     }
 
-    private static void sendInsertMessage(String[] pessoa) throws IOException {
-        String msg = "INSERT;" + pessoa[0] + ";" + pessoa[1] + ";" + pessoa[2];
+    private static void sendInsertMessage(String prefixo, String[] dados) throws IOException {
+        String msg = prefixo.toUpperCase() + ";INSERT;" + dados[0] + ";" + dados[1] + ";" + dados[2];
         sendMessageServer(msg);
     }
 
-    private static void sendUpdateMessage(String[] pessoa) throws IOException {
-        String msg = "UPDATE;" + pessoa[0] + ";" + pessoa[1] + ";" + pessoa[2];
+    private static void sendUpdateMessage(String prefixo, String[] dados) throws IOException {
+        String msg = prefixo.toUpperCase() + ";UPDATE;" + dados[0] + ";" + dados[1] + ";" + dados[2];
         sendMessageServer(msg);
     }
 
-    private static void sendGetMessage(String cpf) throws IOException {
-        String msg = "GET;" + cpf;
+    private static void sendGetMessage(String prefixo, String cpf) throws IOException {
+        String msg = prefixo.toUpperCase() + ";GET;" + cpf;
         sendMessageServer(msg);
     }
 
@@ -92,9 +108,36 @@ public class Client {
         }
     }
 
+    private static String getSelectedRegisterFromConsole(String prefixo) {
+        switch (prefixo) {
+            case "PESSOA": return getPessoaSelecionadaFromConsole();
+            case "TURMA": return getTurmaSelecionadaFromConsole();
+            default: return null;
+        }
+    }
+
     private static String getPessoaSelecionadaFromConsole() {
         System.out.println("Digite o CPF da pessoa: ");
         return scan.next();
+    }
+
+    private static String getTurmaSelecionadaFromConsole() {
+        System.out.println("Digite o ID da turma: ");
+        return scan.next();
+    }
+
+    private static String[] getAlunoTurmaFromConsole() {
+        String cpf = getPessoaSelecionadaFromConsole();
+        String idTurma = getTurmaSelecionadaFromConsole();
+        return new String[]{cpf, idTurma};
+    }
+
+    private static String[] bindDataFromConsole(String prefixo, String identificador) throws Exception {
+        switch (prefixo) {
+            case "PESSOA": return bindPessoaFromConsole(identificador);
+            case "TURMA": return bindTurmaFromConsole(identificador);
+            default: return null;
+        }
     }
 
     private static String[] bindPessoaFromConsole(String cpf) throws Exception {
@@ -114,6 +157,20 @@ public class Client {
         }
 
         return new String[]{cpf, nome, endereco};
+    }
+
+    private static String[] bindTurmaFromConsole(String id) throws Exception {
+        System.out.println("Discplina: ");
+        String disciplina = scan.next();
+
+        System.out.println("Quantidade de alunos: ");
+        String qtdAlunos = scan.next();
+
+        if (disciplina.isBlank() || qtdAlunos.isBlank()) {
+            throw new Exception("Dados incompletos de Pessoa!");
+        }
+
+        return new String[]{id, disciplina, qtdAlunos};
     }
 
 }
