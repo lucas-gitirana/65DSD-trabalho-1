@@ -73,6 +73,15 @@ public class Client {
                 identificador = getSelectedRegisterFromConsole(prefixo);
                 sendGetMessage(prefixo, identificador);
                 break;
+            case 4: //DELETE
+            case 10:
+                identificador = getSelectedRegisterFromConsole(prefixo);
+                sendDeleteMessage(prefixo, identificador);
+                break;
+            case 5: //LIST
+            case 11:
+                sendListMessage(prefixo);
+                break;
         }
     }
 
@@ -88,6 +97,16 @@ public class Client {
 
     private static void sendGetMessage(String prefixo, String cpf) throws IOException {
         String msg = prefixo.toUpperCase() + ";GET;" + cpf;
+        sendMessageServer(msg);
+    }
+
+    private static void sendDeleteMessage(String prefixo, String cpf) throws IOException {
+        String msg = prefixo.toUpperCase() + ";DELETE;" + cpf;
+        sendMessageServer(msg);
+    }
+
+    private static void sendListMessage(String prefixo) throws IOException {
+        String msg = prefixo.toUpperCase() + ";LIST";
         sendMessageServer(msg);
     }
 
@@ -160,17 +179,17 @@ public class Client {
     }
 
     private static String[] bindTurmaFromConsole(String id) throws Exception {
-        System.out.println("Discplina: ");
-        String disciplina = scan.next();
+        System.out.println("Codigo: ");
+        String codigo = scan.next();
 
         System.out.println("Quantidade de alunos: ");
         String qtdAlunos = scan.next();
 
-        if (disciplina.isBlank() || qtdAlunos.isBlank()) {
+        if (codigo.isBlank() || qtdAlunos.isBlank()) {
             throw new Exception("Dados incompletos de Pessoa!");
         }
 
-        return new String[]{id, disciplina, qtdAlunos};
+        return new String[]{id, codigo, qtdAlunos};
     }
 
 }

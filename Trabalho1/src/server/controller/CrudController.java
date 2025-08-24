@@ -10,5 +10,5 @@ public abstract class CrudController<T, ID> {
     public abstract void create(T obj) throws Exception;
     public abstract void update(T obj) throws Exception;
     public abstract void delete(ID id) throws Exception;
-    public abstract List<T> listAll();
+    public abstract String listAll() throws Exception;
 }

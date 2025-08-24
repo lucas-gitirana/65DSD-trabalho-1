@@ -24,6 +24,13 @@ public class PessoaController extends CrudController<Pessoa, String>{
 
             case "GET":
                 return this.getById(partes[2], false).toString();
+
+            case "DELETE":
+                this.delete(partes[2]);
+                return "Pessoa removida com sucesso";
+
+            case "LIST":
+                return this.listAll();
         }
 
         return "";
@@ -39,6 +46,7 @@ public class PessoaController extends CrudController<Pessoa, String>{
             if (p.getCpf().equalsIgnoreCase(cpf))
                 return p;
         }
+
         throw new Exception("Pessoa não encontrada!");
     }
 
@@ -51,8 +59,6 @@ public class PessoaController extends CrudController<Pessoa, String>{
         } catch (Exception e) {
             this.pessoas.add(pessoa);
         }
-
-        throw new Exception("A pessoa já existe");
     }
 
     @Override
@@ -64,11 +70,16 @@ public class PessoaController extends CrudController<Pessoa, String>{
 
     @Override
     public void delete(String s) throws Exception {
-
+        pessoas.remove(getById(s, false));
     }
 
     @Override
-    public List<Pessoa> listAll() {
-        return List.of();
+    public String listAll() throws Exception{
+        if (pessoas.isEmpty()) {
+            return "0";
+        }
+
+        return "0" + pessoas.size() +
+                ", Pessoas: " + pessoas;
     }
 }

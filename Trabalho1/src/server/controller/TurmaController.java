@@ -26,6 +26,7 @@ public class TurmaController extends CrudController<Turma, String>{
                     Integer.parseInt(partes[4]))
                 );
                 return "Turma " + turmas.size() + " incluída com sucesso";
+
             case "UPDATE":
                 this.update(new Turma(
                     Integer.parseInt(partes[2]),
@@ -33,11 +34,20 @@ public class TurmaController extends CrudController<Turma, String>{
                     Integer.parseInt(partes[4]))
                 );
                 return "Turma atualizada com sucesso";
+
             case "GET":
                 return this.getById(partes[2], false).toString();
+
             case "ADD_PESSOA":
                 this.addPessoaTurma(partes[2], partes[3]);
                 return "Pessoa adicionada na turma com sucesso";
+
+            case "DELETE":
+                this.delete(partes[2]);
+                return "Turma removida com sucesso";
+
+            case "LIST":
+                return this.listAll();
         }
 
         return "";
@@ -70,17 +80,22 @@ public class TurmaController extends CrudController<Turma, String>{
     @Override
     public void update(Turma newTurma) throws Exception {
         Turma oldTurma = getById(String.valueOf(newTurma.getId()), true);
-        oldTurma.setDisciplina(newTurma.getDisciplina());
+        oldTurma.setCodigo(newTurma.getCodigo());
         oldTurma.setQtdAlunos(newTurma.getQtdAlunos());
     }
 
     @Override
     public void delete(String s) throws Exception {
-
+        turmas.remove(getById(s, false));
     }
 
     @Override
-    public List<Turma> listAll() {
-        return List.of();
+    public String listAll() {
+        if (turmas.isEmpty()) {
+            return "0";
+        }
+
+        return "0" + turmas.size() +
+                ", Turmas: " + turmas;
     }
 }

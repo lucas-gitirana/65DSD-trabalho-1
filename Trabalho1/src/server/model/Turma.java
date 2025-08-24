@@ -5,16 +5,16 @@ import java.util.ArrayList;
 public class Turma {
 
     private int id;
-    private String disciplina;
+    private String codigo;
     private int qtdAlunos;
     private ArrayList<Pessoa> pessoas = new ArrayList<>();
 
     public Turma() {
     }
 
-    public Turma(int id, String disciplina, int qtdAlunos) {
+    public Turma(int id, String codigo, int qtdAlunos) {
         this.id = id;
-        this.disciplina = disciplina;
+        this.codigo = codigo;
         this.qtdAlunos = qtdAlunos;
     }
 
@@ -26,12 +26,12 @@ public class Turma {
         this.id = id;
     }
 
-    public String getDisciplina() {
-        return disciplina;
+    public String getCodigo() {
+        return codigo;
     }
 
-    public void setDisciplina(String disciplina) {
-        this.disciplina = disciplina;
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public int getQtdAlunos() {
@@ -54,7 +54,7 @@ public class Turma {
     public String toString() {
         return "Turma{" +
                 "id=" + id +
-                ", disciplina='" + disciplina + '\'' +
+                ", codigo='" + codigo + '\'' +
                 ", qtdAlunos=" + qtdAlunos +
                 ", pessoas=" + pessoas +
                 '}';
