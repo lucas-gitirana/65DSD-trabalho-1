@@ -8,6 +8,7 @@ import java.util.List;
 public class PessoaController extends CrudController<Pessoa, String>{
 
     private ArrayList<Pessoa> pessoas = new ArrayList<>();
+    private TurmaController turmaController;
 
     @Override
     public String handleMessage(String[] partes) throws Exception {
@@ -70,7 +71,11 @@ public class PessoaController extends CrudController<Pessoa, String>{
 
     @Override
     public void delete(String s) throws Exception {
-        pessoas.remove(getById(s, false));
+        Pessoa pessoa = getById(s, false);
+        if(turmaController != null){
+            turmaController.deletePessoaFromAllTurmas(pessoa);
+        }
+        pessoas.remove(pessoa);
     }
 
     @Override
@@ -81,5 +86,9 @@ public class PessoaController extends CrudController<Pessoa, String>{
 
         return "0" + pessoas.size() +
                 ", Pessoas: " + pessoas;
+    }
+
+    public void setTurmaController(TurmaController turmaController) {
+        this.turmaController = turmaController;
     }
 }

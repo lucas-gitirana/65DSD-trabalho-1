@@ -13,6 +13,8 @@ public class Server {
     static TurmaController turmaController = new TurmaController(pessoaController);
 
     public static void main(String[] args) throws IOException {
+        pessoaController.setTurmaController(turmaController);
+
         ServerSocket server = new ServerSocket(65000);
         server.setReuseAddress(true);
         System.out.println("Servidor iniciado. Aguardando conexões...");

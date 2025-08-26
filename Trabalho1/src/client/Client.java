@@ -26,10 +26,11 @@ public class Client {
                 "5 - Listar pessoas\n" +
                 "6 - Inserir turma\n" +
                 "7 - Adicionar aluno na turma\n" +
-                "8 - Atualizar turma\n" +
-                "9 - Consultar turma\n" +
-                "10 - Remover turma\n" +
-                "11 - Listar turmas\n" +
+                "8 - Remover aluno da turma\n" +
+                "9 - Atualizar turma\n" +
+                "10 - Consultar turma\n" +
+                "11 - Remover turma\n" +
+                "12 - Listar turmas\n" +
                 "exit - Sair"
             );
 
@@ -50,6 +51,7 @@ public class Client {
         String[] dados = null;
         String identificador = null;
         String prefixo = operacao <= 5 ? "PESSOA" : "TURMA";
+        String msg = null;
 
         switch (operacao) {
             case 1: //INSERT
@@ -58,29 +60,34 @@ public class Client {
                 sendInsertMessage(prefixo, dados);
                 break;
             case 2: //UPDATE
-            case 8:
+            case 9:
                 identificador = getSelectedRegisterFromConsole(prefixo);
                 dados = bindDataFromConsole(prefixo, identificador);
                 sendUpdateMessage(prefixo, dados);
                 break;
-            case 7: //ADD_PESSOA
-                dados = getAlunoTurmaFromConsole();
-                String msg =  "TURMA;ADD_PESSOA;" + dados[0] + ";" + dados[1];
-                sendMessageServer(msg);
-                break;
             case 3: //GET
-            case 9:
+            case 10:
                 identificador = getSelectedRegisterFromConsole(prefixo);
                 sendGetMessage(prefixo, identificador);
                 break;
             case 4: //DELETE
-            case 10:
+            case 11:
                 identificador = getSelectedRegisterFromConsole(prefixo);
                 sendDeleteMessage(prefixo, identificador);
                 break;
             case 5: //LIST
-            case 11:
+            case 12:
                 sendListMessage(prefixo);
+                break;
+            case 7: //ADD_PESSOA
+                dados = getAlunoTurmaFromConsole();
+                msg =  "TURMA;ADD_PESSOA;" + dados[0] + ";" + dados[1];
+                sendMessageServer(msg);
+                break;
+            case 8: //DELETE_PESSOA
+                dados = getAlunoTurmaFromConsole();
+                msg = "TURMA;DELETE_PESSOA;" + dados[0] + ";" + dados[1];
+                sendMessageServer(msg);
                 break;
         }
     }
@@ -141,7 +148,7 @@ public class Client {
     }
 
     private static String getTurmaSelecionadaFromConsole() {
-        System.out.println("Digite o ID da turma: ");
+        System.out.println("Digite o código da turma: ");
         return scan.next();
     }
 
