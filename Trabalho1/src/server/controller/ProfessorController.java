@@ -28,7 +28,7 @@ public class ProfessorController extends CrudController<Professor, String>{
 
             case "DELETE":
                 this.delete(partes[2]);
-                return "Professor removida com sucesso";
+                return "Professor removido com sucesso";
 
             case "LIST":
                 return this.listAll();

@@ -21,14 +21,14 @@ public class AlunoController extends CrudController<Aluno, String>{
 
             case "UPDATE":
                 this.update(new Aluno(partes[2], partes[3], partes[4], partes[5]));
-                return "Aluno atualizada com sucesso";
+                return "Aluno atualizado com sucesso";
 
             case "GET":
                 return this.getById(partes[2], false).toString();
 
             case "DELETE":
                 this.delete(partes[2]);
-                return "Aluno removida com sucesso";
+                return "Aluno removido com sucesso";
 
             case "LIST":
                 return this.listAll();

@@ -28,7 +28,7 @@ public class TurmaController extends CrudController<Turma, String>{
                     partes[3],
                     Integer.parseInt(partes[4]))
                 );
-                return "Turma " + turmas.size() + " incluída com sucesso";
+                return "Turma " + partes[3] + " incluída com sucesso";
 
             case "UPDATE":
                 this.update(new Turma(
