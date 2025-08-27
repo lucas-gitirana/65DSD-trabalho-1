@@ -6,7 +6,9 @@ public class Turma {
 
     private String codigo;
     private int qtdAlunos;
-    private ArrayList<Pessoa> pessoas = new ArrayList<>();
+
+    private ArrayList<Aluno> alunos = new ArrayList<>();
+    private ArrayList<Professor> professores = new ArrayList<>();
 
     public Turma() {
     }
@@ -32,20 +34,29 @@ public class Turma {
         this.qtdAlunos = qtdAlunos;
     }
 
-    public ArrayList<Pessoa> getPessoas() {
-        return pessoas;
+    public ArrayList<Aluno> getAlunos() {
+        return alunos;
     }
 
-    public void setPessoas(ArrayList<Pessoa> pessoas) {
-        this.pessoas = pessoas;
+    public void setPessoas(ArrayList<Aluno> alunos) {
+        this.alunos = alunos;
+    }
+
+    public ArrayList<Professor> getProfessores() {
+        return professores;
+    }
+
+    public void setProfessores(ArrayList<Professor> professores) {
+        this.professores = professores;
     }
 
     @Override
     public String toString() {
         return "Turma{" +
-                ", codigo='" + codigo + '\'' +
+                "codigo='" + codigo + '\'' +
                 ", qtdAlunos=" + qtdAlunos +
-                ", pessoas=" + pessoas +
+                ", alunos=" + alunos +
+                ", professores=" + professores +
                 '}';
     }
 }

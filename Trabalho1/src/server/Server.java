@@ -1,6 +1,7 @@
 package server;
 
-import server.controller.PessoaController;
+import server.controller.AlunoController;
+import server.controller.ProfessorController;
 import server.controller.TurmaController;
 
 import java.io.*;
@@ -9,11 +10,13 @@ import java.net.Socket;
 
 public class Server {
 
-    static PessoaController pessoaController = new PessoaController();
-    static TurmaController turmaController = new TurmaController(pessoaController);
+    static AlunoController alunoController = new AlunoController();
+    static ProfessorController professorController = new ProfessorController();
+    static TurmaController turmaController = new TurmaController(alunoController, professorController);
 
     public static void main(String[] args) throws IOException {
-        pessoaController.setTurmaController(turmaController);
+        alunoController.setTurmaController(turmaController);
+        professorController.setTurmaController(turmaController);
 
         ServerSocket server = new ServerSocket(65000);
         server.setReuseAddress(true);
@@ -63,8 +66,10 @@ public class Server {
     private static String handleMessageFromClient(String mensagem) throws Exception {
         String[] partes = mensagem.split(";");
         switch (partes[0]) {
-            case "PESSOA":
-                return pessoaController.handleMessage(partes);
+            case "PESSOA_ALUNO":
+                return alunoController.handleMessage(partes);
+            case "PESSOA_PROFESSOR":
+                return professorController.handleMessage(partes);
             case "TURMA":
                 return turmaController.handleMessage(partes);
             default:

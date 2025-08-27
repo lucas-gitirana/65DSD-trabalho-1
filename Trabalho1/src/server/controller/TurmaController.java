@@ -1,17 +1,21 @@
 package server.controller;
 
+import server.model.Aluno;
 import server.model.Pessoa;
+import server.model.Professor;
 import server.model.Turma;
 import java.util.ArrayList;
-import java.util.List;
 
 public class TurmaController extends CrudController<Turma, String>{
 
     private ArrayList<Turma> turmas = new ArrayList<>();
-    private PessoaController pessoaController;
 
-    public TurmaController(PessoaController pessoaController) {
-        this.pessoaController = pessoaController;
+    private AlunoController alunoController;
+    private ProfessorController professorController;
+
+    public TurmaController(AlunoController alunoCtr, ProfessorController professorCtr) {
+        this.alunoController = alunoCtr;
+        this.professorController = professorCtr;
     }
 
     @Override
@@ -43,38 +47,64 @@ public class TurmaController extends CrudController<Turma, String>{
             case "LIST":
                 return this.listAll();
 
-            case "ADD_PESSOA":
-                this.addPessoaTurma(partes[2], partes[3]);
-                return "Pessoa adicionada na turma com sucesso";
+            case "ADD_ALUNO":
+                this.addAlunoTurma(partes[2], partes[3]);
+                return "Aluno adicionado na turma com sucesso";
 
-            case "DELETE_PESSOA":
-                this.deletePessoaTurma(partes[2], partes[3]);
-                return "Pessoa removida da turma com sucesso";
+            case "DELETE_ALUNO":
+                this.deleteAlunoTurma(partes[2], partes[3]);
+                return "Aluno removido da turma com sucesso";
+
+            case "ADD_PROFESSOR":
+                this.addProfessorTurma(partes[2], partes[3]);
+                return "Professor adicionado na turma com sucesso";
+
+            case "DELETE_PROFESSOR":
+                this.deleteProfessorTurma(partes[2], partes[3]);
+                return "Professor removido da turma com sucesso";
         }
 
         return "";
     }
 
-    private void addPessoaTurma(String cpf, String idTurma) throws Exception {
-        Pessoa pessoa = pessoaController.getById(cpf, true);
+    private void addAlunoTurma(String cpf, String idTurma) throws Exception {
+        Aluno aluno = alunoController.getById(cpf, true);
         Turma turma = getById(idTurma, true);
-        turma.getPessoas().add(pessoa);
+        turma.getAlunos().add(aluno);
     }
 
-    private void deletePessoaTurma(String cpf, String idTurma) throws Exception {
-        Pessoa pessoa = pessoaController.getById(cpf, true);
+    private void deleteAlunoTurma(String cpf, String idTurma) throws Exception {
+        Aluno aluno = alunoController.getById(cpf, true);
         Turma turma = getById(idTurma, true);
-        turma.getPessoas().remove(pessoa);
+        turma.getAlunos().remove(aluno);
     }
 
-    public void deletePessoaFromAllTurmas(Pessoa pessoa){
-        for(Turma turma : turmas){
-            turma.getPessoas().remove(pessoa);
+    private void addProfessorTurma(String cpf, String idTurma) throws Exception {
+        Professor professor = professorController.getById(cpf, true);
+        Turma turma = getById(idTurma, true);
+        turma.getProfessores().add(professor);
+    }
+
+    private void deleteProfessorTurma(String cpf, String idTurma) throws Exception {
+        Professor professor = professorController.getById(cpf, true);
+        Turma turma = getById(idTurma, true);
+        turma.getProfessores().remove(professor);
+    }
+
+    public void deleteAlunoFromAllTurmas(Aluno aluno) {
+        for (Turma turma : turmas){
+            turma.getAlunos().remove(aluno);
+        }
+    }
+
+    public void deleteProfessorFromAllTurmas(Professor professor) {
+        for (Turma turma : turmas){
+            turma.getProfessores().remove(professor);
         }
     }
 
     @Override
-    public Turma getById(String codigo, boolean ignoreEmpty) throws Exception {
+    public Turma getById(String codigo, boolean ignoreEmpty, boolean ignoreNotFound) throws Exception {
         if (turmas.isEmpty() && !ignoreEmpty) {
             throw new Exception("Sem turmas cadastradas");
         }
@@ -83,11 +113,19 @@ public class TurmaController extends CrudController<Turma, String>{
             if (t.getCodigo().equals(codigo))
                 return t;
         }
-        throw new Exception("Turma não encontrada!");
+
+        if (!ignoreNotFound) {
+            throw new Exception("Turma não encontrada!");
+        }
+
+        return null;
     }
 
     @Override
-    public void create(Turma t) {
+    public void create(Turma t) throws Exception {
+        if (getById(t.getCodigo(), true, true) != null) {
+            throw new Exception("Já existe uma turma com esse código");
+        }
         this.turmas.add(t);
     }
 
